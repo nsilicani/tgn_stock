@@ -1,0 +1,12 @@
+black
+isort
+loguru
+mkdocs
+pip
+python-dotenv
+tqdm
+typer
+pandas_ta
+yfinance
+ruff
+-e .
