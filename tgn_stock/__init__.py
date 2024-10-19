@@ -1,1 +1,1 @@
-from tgn_stock import config  # noqa: F401
+from tgn_stock.config import config  # noqa: F401

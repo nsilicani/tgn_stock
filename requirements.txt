@@ -6,7 +6,10 @@ pip
 python-dotenv
 tqdm
 typer
-pandas_ta
-yfinance
+numpy==1.26.4
+pandas==2.2.2
+pandas_ta==0.3.14b
+yfinance==0.2.44
+openpyxl==3.1.5
 ruff
 -e .
