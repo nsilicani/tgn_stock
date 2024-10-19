@@ -1,0 +1,31 @@
+target_strategy: "binary"
+indicators:
+  cci: 
+    len: 20
+    cci_low: 100
+    cci_high: -100
+  adx: 
+    len: 14
+    sign_len: 20
+  mfi: 
+    len: 14
+    mfi_low: 20
+    mfi_high: 80
+  rsi:
+    len: 14
+    sign_len: 9
+  stoch:
+    k: 14
+    d: 3
+    smooth_k: 3
+  bb:
+    len: 20
+    std: 2
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+  volume:
+    window: 5
+min_data_points: 100
+limit: 110
