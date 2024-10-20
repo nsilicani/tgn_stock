@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, List, NoReturn, Optional
+from typing import Any, Dict, List, NoReturn
 
 from loguru import logger
 
@@ -139,9 +139,11 @@ class DataRetriever:
         bb_len = self.config["indicators"]["bb"]["len"]
         bb_std = self.config["indicators"]["bb"]["std"]
         bb = ta.bbands(close=df["Adj Close"], length=bb_len, std=bb_std)
-        df["BB_Upper"] = bb[f"BBU_{bb_len}_{bb_std}"]
-        df["BB_Lower"] = bb[f"BBL_{bb_len}_{bb_std}"]
-        df["BB_Mid"] = bb[f"BBM_{bb_len}_{bb_std}"]
+        df["BB_Upper"] = bb[
+            f"BBU_{bb_len}_{bb_std}.0"
+        ]  # Note: in pandas_ta dev version the correct column name is: BBU_20_2
+        df["BB_Lower"] = bb[f"BBL_{bb_len}_{bb_std}.0"]
+        df["BB_Mid"] = bb[f"BBM_{bb_len}_{bb_std}.0"]
 
         # 9. MACD-S (MACD Signal)
         macd_fast = self.config["indicators"]["macd"]["fast"]
@@ -174,7 +176,7 @@ class DataRetriever:
         cci_high = self.config["indicators"]["cci"]["cci_high"]
         df.loc[(df["CCI"] >= cci_low) & (df["CCI_previous"] < cci_low), "CCI-S"] = 1
         df.loc[(df["CCI"] <= cci_high) & (df["CCI_previous"] > cci_high), "CCI-S"] = -1
-        df.drop(columns="CCI_previous")
+        df.drop(columns="CCI_previous", inplace=True)
 
         # Custom Technical Signals:
 
@@ -193,6 +195,7 @@ class DataRetriever:
             1
         )  # Previous day's Adjusted closing price
         df["CPCPY-S"] = np.sign(df["Adj Close"] - df["Prev_Close"])
+        df.drop(columns="Prev_Close", inplace=True)
 
         # Drop rows with NaN values (due to rolling/shift operations)
         df.dropna(inplace=True)

@@ -9,7 +9,12 @@ typer
 numpy==1.26.4
 pandas==2.2.2
 pandas_ta==0.3.14b
+pyarrow==17.0.0
 yfinance==0.2.44
 openpyxl==3.1.5
 ruff
+scikit-learn==1.5.2
+networkx==3.4.1
+xgboost==2.1.1
+matplotlib
 -e .

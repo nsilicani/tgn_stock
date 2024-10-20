@@ -27,5 +27,6 @@ indicators:
     signal: 9
   volume:
     window: 5
-min_data_points: 100
-limit: 110
+min_data_points: 125
+# limit: 140
+limit: 10

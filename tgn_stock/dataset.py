@@ -4,7 +4,8 @@ import typer
 from loguru import logger
 from tqdm import tqdm
 
-from tgn_stock.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
+from tgn_stock.config import PROCESSED_DATA_DIR, RAW_DATA_DIR, data_config
+from tgn_stock.data import DataRetriever
 
 app = typer.Typer()
 
@@ -12,17 +13,14 @@ app = typer.Typer()
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = RAW_DATA_DIR / "dataset.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
+    input_path: Path = RAW_DATA_DIR / "chinese_companies_Oct2024.xlsx",
+    output_path: Path = PROCESSED_DATA_DIR,
+    dataset_version: str = "1.0.0",
     # ----------------------------------------------
 ):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Processing dataset...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Processing dataset complete.")
-    # -----------------------------------------
+    data_retriever = DataRetriever(raw_data_path=input_path, config=data_config)
+    df = data_retriever.fetch_data()
+    data_retriever.save(df, output_path / f"stock_data_{dataset_version}.parquet")
 
 
 if __name__ == "__main__":
