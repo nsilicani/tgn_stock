@@ -28,5 +28,4 @@ indicators:
   volume:
     window: 5
 min_data_points: 125
-# limit: 140
-limit: 10
+limit: 140

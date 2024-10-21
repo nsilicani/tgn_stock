@@ -26,7 +26,7 @@ class StockGraph:
         features: List[str],
         features_to_norm: List[str],
         cls_name: str,
-        cls_params: str,
+        cls_params: Dict[str, Any],
         lambda_weight: float = 0.7,
         min_data_points: int = 125,
         train_size: float = 0.8,
@@ -43,21 +43,21 @@ class StockGraph:
         self.lambda_weight = lambda_weight
         self.min_data_points = min_data_points
         self.train_size = train_size
-        # Set the classifier
-        self.clf = self.get_classifier(cls_name, cls_params)
+        self.cls_name = cls_name
+        self.cls_params = cls_params
         self.graph = nx.Graph()
+        self.avg_score = []
 
-    def get_classifier(self, cls_name: str, cls_params: Dict[str, Any]) -> Callable:
+    def get_classifier(self) -> Callable:
         """Return a classifier object based on the config."""
-        if cls_name == "SVC":
-            return SVC(**cls_params)
-        elif cls_name == "RandomForestClassifier":
-            return RandomForestClassifier(**cls_params)
-
-        elif cls_name == "xgboost":
-            return XGBClassifier(**cls_params)
+        if self.cls_name == "SVC":
+            return SVC(**self.cls_params)
+        elif self.cls_name == "RandomForestClassifier":
+            return RandomForestClassifier(**self.cls_params)
+        elif self.cls_name == "XGBClassifier":
+            return XGBClassifier(**self.cls_params)
         else:
-            raise ValueError(f"Unsupported classifier: {cls_name}")
+            raise ValueError(f"Unsupported classifier: {self.cls_name}")
 
     def get_historic_data(self, reference_date) -> pd.DataFrame:
         """Get data for the trading days before the reference date."""
@@ -134,10 +134,10 @@ class StockGraph:
         X_train_proc, X_val_proc = self.normalize_data(X_train_proc, X_val_proc)
 
         # Initialize classifiers
-        cls_s1 = self.clf
-        cls_s2 = self.clf
-        cls_s1_s2 = self.clf
-        cls_s2_s1 = self.clf
+        cls_s1 = self.get_classifier()
+        cls_s2 = self.get_classifier()
+        cls_s1_s2 = self.get_classifier()
+        cls_s2_s1 = self.get_classifier()
 
         # Compute scores for both stocks
         score_s1 = self.compute_score(
@@ -154,6 +154,9 @@ class StockGraph:
         score_s2_s1 = self.compute_score(
             cls_s2_s1, X_train_proc, Y_train_s2, X_val_proc, Y_val_s2
         )
+
+        # Store scores
+        self.avg_score.extend([score_s1, score_s2, score_s1_s2, score_s2_s1])
 
         # Influence Calculation
         influence = 0.5 * ((score_s1_s2 - score_s1) + (score_s2_s1 - score_s2))
@@ -213,8 +216,9 @@ class StockGraph:
         logger.info("Normalizing edge weights ...")
         self.normalize_edge_weights()
 
-        # Assing reference date as graph attribute
+        # Assing graph attributes
         self.graph.graph["ref_date"] = reference_date
+        self.graph.graph["avg_score"] = np.mean(self.avg_score)
 
     def save_graph(self, date: str, output_path: Path) -> None:
         """Save the graph for a particular date."""
@@ -234,7 +238,7 @@ class GraphManager:
         features: List[str],
         features_to_norm: List[str],
         cls_name: str,
-        cls_params: str,
+        cls_params: Dict[str, Any],
         lambda_weight: float = 0.7,
         min_data_points: int = 125,
         train_size: float = 0.8,

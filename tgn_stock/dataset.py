@@ -12,12 +12,13 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
     input_path: Path = RAW_DATA_DIR / "chinese_companies_Oct2024.xlsx",
     output_path: Path = PROCESSED_DATA_DIR,
     dataset_version: str = "1.0.0",
-    # ----------------------------------------------
 ):
+    """
+    Create Dataset
+    """
     data_retriever = DataRetriever(raw_data_path=input_path, config=data_config)
     df = data_retriever.fetch_data()
     data_retriever.save(df, output_path / f"stock_data_{dataset_version}.parquet")
