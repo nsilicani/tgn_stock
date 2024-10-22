@@ -91,7 +91,9 @@ class StockGraph:
         Y_pred = cls.predict(X_val)
         return f1_score(Y_val, Y_pred, average="weighted")
 
-    def process_stock_pairs(self, stock1: str, stock2: str, data: pd.DataFrame) -> None:
+    def process_stock_pairs(
+        self, stock1: str, stock2: str, data: pd.DataFrame, reference_date: pd.Timestamp
+    ) -> None:
         """Process each stock pair to compute influence and add edges to the graph."""
         stock1_data = data.loc[data["Ticker"] == stock1]
         stock2_data = data.loc[data["Ticker"] == stock2]
@@ -194,19 +196,18 @@ class StockGraph:
         for u, v, data in self.graph.edges(data=True):
             data["weight"] /= max_weight
 
-    def build_graph(self, reference_date: pd.Timestamp) -> None:
-        """Build the stock relationship graph."""
-        # Get data for the last 5 trading days
+    def build_graph(self, stock_list: List[str], reference_date: pd.Timestamp) -> None:
+        """Build the stock influence graph."""
+
         df_historic = self.get_historic_data(reference_date)
 
         # Get stock pairs
-        stock_list = df_historic["Ticker"].unique().tolist()
         stock_pairs = self.compute_pairs(stock_list)
 
         # Process each pair of stocks
         logger.info("Processing stock pairs ...")
         for stock1, stock2 in tqdm(stock_pairs, total=len(stock_pairs)):
-            self.process_stock_pairs(stock1, stock2, df_historic)
+            self.process_stock_pairs(stock1, stock2, df_historic, reference_date)
 
         # Prune the graph
         logger.info("Pruning graph ...")
@@ -235,6 +236,7 @@ class GraphManager:
     def build_graph_for_reference_date(
         self,
         reference_date: pd.Timestamp,
+        stock_list: List[str],
         features: List[str],
         features_to_norm: List[str],
         cls_name: str,
@@ -254,7 +256,7 @@ class GraphManager:
             min_data_points=min_data_points,
             train_size=train_size,
         )
-        stock_graph.build_graph(reference_date)
+        stock_graph.build_graph(stock_list, reference_date)
         self.graphs[reference_date] = stock_graph.graph
         stock_graph.save_graph(
             date=reference_date.strftime("%Y-%m-%d"), output_path=self.output_path
