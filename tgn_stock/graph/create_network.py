@@ -25,10 +25,18 @@ def main(
     output_path: Annotated[
         Path, typer.Option(help="The output path where graph snapshots are saved")
     ] = PROCESSED_DATA_DIR,
+    graph_version: Annotated[
+        str, typer.Option(help="The influence graph")
+    ] = "1.0.0",
 ):
     """
     Builds stock relationship graphs over a specified time frequency using the stock data provided in a DataFrame.
     """
+    # Paths
+    assert dataset_path.exists(), f"Path {dataset_path} does not exist"
+    assert output_path.exists(), f"Path {output_path} does not exist"
+    output_path = output_path / graph_version
+    output_path.mkdir(exist_ok=True, parents=True)
     # Load Data
     df = pd.read_parquet(dataset_path)
     assert not df.isna().sum().any(), "There are some NaN in provided dataset"

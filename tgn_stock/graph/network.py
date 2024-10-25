@@ -192,9 +192,12 @@ class StockGraph:
 
     def normalize_edge_weights(self) -> None:
         """Normalize edge weights to a [0, 1] range."""
-        max_weight = max(nx.get_edge_attributes(self.graph, "weight").values())
-        for u, v, data in self.graph.edges(data=True):
-            data["weight"] /= max_weight
+        try:
+            max_weight = max(nx.get_edge_attributes(self.graph, "weight").values())
+            for u, v, data in self.graph.edges(data=True):
+                data["weight"] /= max_weight
+        except ValueError:
+            logger.warning("Graph is empty")
 
     def build_graph(self, stock_list: List[str], reference_date: pd.Timestamp) -> None:
         """Build the stock influence graph."""
