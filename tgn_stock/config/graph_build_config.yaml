@@ -1,0 +1,15 @@
+features: ["Open", "High", "Low", "Close", "Adj Close", "Volume", "CCI", "SAR", "PSARr", "ADX", "ADX-S", "MFI", "MFI-S", "RSI", "RSI-S", "SK", "SD", "BB_Upper", "BB_Lower", "BB_Mid", "MACD", "MACD_Signal", "SAR-S", "S-S", "CCI-S", "Volume_MA5", "V-S", "CPOP-S", "CPCPY-S"]
+features_to_norm: ["Open", "High", "Low", "Close", "Adj Close", "Volume", "CCI", "SAR", "ADX", "MFI", "RSI", "RSI-S", "SK", "SD", "BB_Upper", "BB_Lower", "BB_Mid", "MACD", "MACD_Signal", "Volume_MA5"]
+# cls_name: "SVC"
+# cls_params:
+#   C: 1
+#   kernel: "rbf"
+cls_name: "XGBClassifier"
+cls_params:
+  n_estimators: 100
+  max_depth: 3
+  learning_rate: 0.05
+  random_state: 42
+lambda_weight: 0.7
+min_data_points: 125
+train_size: 0.8

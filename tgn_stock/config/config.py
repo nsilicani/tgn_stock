@@ -43,3 +43,7 @@ except ModuleNotFoundError:
 # Load Data configurations
 with open(CONFIG_DIR / "data_config.yaml", "r") as file:
     data_config = yaml.safe_load(file)
+
+# Load graph builder configurations
+with open(CONFIG_DIR / "graph_build_config.yaml", "r") as file:
+    graph_build_config = yaml.safe_load(file)
