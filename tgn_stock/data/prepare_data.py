@@ -49,11 +49,13 @@ def main(
     assert influence_graph_path.exists(), f"Path {influence_graph_path} does not exist"
     assert output_path.exists(), f"Path {output_path} does not exist"
     assert features_path.exists(), f"Path {features_path} does not exist"
-    output_path = output_path / df_graph_version
+    influence_graph_path /= df_graph_version
+    influence_graph_path.mkdir(exist_ok=True, parents=True)
+    output_path /= df_graph_version
     output_path.mkdir(exist_ok=True, parents=True)
-    idxs_path = idxs_path / df_graph_version
+    idxs_path /= df_graph_version
     idxs_path.mkdir(exist_ok=True, parents=True)
-    features_path = features_path / df_graph_version
+    features_path /= df_graph_version
     features_path.mkdir(exist_ok=True, parents=True)
 
     # Load Data
