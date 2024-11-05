@@ -13,7 +13,7 @@ In this project we apply Temporal Graph Networks (TGN) to stock market domain. T
 
 ## Graph Builder
 The following are the steps to compute the daily influence network. The approach is based on [GCNET: graph-based prediction of stock price movement using graph convolutional network](https://arxiv.org/pdf/2203.11091v1):
-- Select reference date. At start point, it will be the latest available date. In the following iterations, we compute the previous five business days
+- Select reference date. At start point, it will be the latest available date. In the following iterations, we compute the previous $N$ business days
 - Select the set of stocks with available data. Compute the number of stock pairs
 - For each stock, split the training $X^T_{s{i}}, Y^T_{s{i}}$ and validation $X^V_{s{i}}, Y^V_{s{i}}$ parts of data
 - For each pair of stock $(s_{i}, s_{j})$:
