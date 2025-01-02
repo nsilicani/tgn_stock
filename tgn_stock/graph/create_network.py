@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import typer
@@ -24,7 +25,7 @@ def main(
     ] = "30D",
     output_path: Annotated[
         Path, typer.Option(help="The output path where graph snapshots are saved")
-    ] = PROCESSED_DATA_DIR,
+    ] = PROCESSED_DATA_DIR / "influence_graphs",
     graph_version: Annotated[
         str, typer.Option(help="The influence graph")
     ] = "1.0.0",
@@ -104,18 +105,25 @@ def main(
         ref_date = window_data.index.max()
         stock_list = df_stock_list[df_stock_list["Date"] == ref_date]["Ticker"].item()
 
-        # Build the graph for the current 30-day interval
-        grap_manager.build_graph_for_reference_date(
-            reference_date=ref_date,
-            stock_list=stock_list,
-            features=features,
-            features_to_norm=features_to_norm,
-            cls_name=cls_name,
-            cls_params=cls_params,
-            lambda_weight=lambda_weight,
-            min_data_points=min_data_points,
-            train_size=train_size,
-        )
+        # Build the graph for the current N-day interval
+        check_date = ref_date.strftime("%Y-%m-%d")
+        filename = f"stock_graph_{check_date}.pickle"
+        if filename not in os.listdir(output_path):
+            grap_manager.build_graph_for_reference_date(
+                reference_date=ref_date,
+                stock_list=stock_list,
+                features=features,
+                features_to_norm=features_to_norm,
+                cls_name=cls_name,
+                cls_params=cls_params,
+                lambda_weight=lambda_weight,
+                min_data_points=min_data_points,
+                train_size=train_size,
+            )
+        else:
+            # If ref_date is in the output path, we assume the influence graph is already computed for that day
+            logger.info(f"Influence graph already computed for {filename}. Skipping {check_date} ...")
+            continue
 
         # Calculate iteration time and total elapsed time
         iteration_time = time.time() - iteration_start_time

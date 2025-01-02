@@ -171,5 +171,9 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Exclude notebooks
-notebooks/
+# Ignore all notebooks
+notebooks/*
+
+# Re-include the tgn_model folder and its contents
+!notebooks/tgn_model/
+!notebooks/tgn_model/*
