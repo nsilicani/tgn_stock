@@ -13,7 +13,6 @@ In this project we apply Temporal Graph Networks (TGN) to stock market domain. T
 The main goal of the project is computing difference graphs at different timestamp (_influence network_) among an arbitrary set of stocks. The graph reports the relationship between stocks based on price correlation and inter-related stocks behavior ([GCNET: graph-based prediction of stock price movement using graph convolutional network](https://arxiv.org/pdf/2203.11091v1)). We then use the computed dynamic networks to predict stock return movements using Temporal Graph Network (TGN). This approach, exploiting a combination of memory modules and graph-based operators, allows for 
 Conceptually, the project can be divided in two modules: Graph Builder and Model Training.
 
-
 ## Graph Builder
 The following are the steps to compute the daily influence network. The approach is based on [GCNET: graph-based prediction of stock price movement using graph convolutional network](https://arxiv.org/pdf/2203.11091v1):
 - Select reference date. At start point, it will be the latest available date. In the following iterations, we compute the previous $N$ business days
@@ -39,8 +38,15 @@ The following are the steps to compute the daily influence network. The approach
 - Normalize edge weights
 - Save the computed graph in a structure mapping reference date to graph
 
-## Model Training
-The training procedure is based on [Temporal Graph Networks for Deep Learning on Dynamic Graphs](https://arxiv.org/abs/2006.10637) to compute node classification and predict the node label
+## Model Training  
+The training process follows the methodology outlined in [Temporal Graph Networks for Deep Learning on Dynamic Graphs](https://arxiv.org/abs/2006.10637) to perform node classification and predict node labels.  
+ 
+The training is executed using the [train notebook](./notebooks/train.ipynb). Our model, built on the [TGN](https://github.com/twitter-research/tgn) codebase, is trained on Google Colab to take advantage of GPU acceleration. The notebook expects a `tgn-stock/data.zip` file, located in your Google Drive, which can be extracted using the following command:  
+
+```bash
+cd drive/MyDrive/tgn-stock && unzip data.zip -d
+```
+The extracted zip file should contain a `data/processed/`directory. To set up the data folder structure required for training, run the [prepare data command](./tgn_stock/data/prepare_data.py). Once the setup is complete, the data will be ready for use with the [train notebook](./notebooks/train.ipynb).
 
 ## Resources
 - [DeepNeet-Code](https://github.com/alireza-jafari/DeepNet-Code/blob/main/main.py)
