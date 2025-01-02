@@ -163,6 +163,7 @@ def main(
                 )
     # Store feature as numpy
     feat_shape = len(graph_build_config["features"])
+    # Array of shape (n_nodes, timestamps_idx, feature_dim)
     node_features = np.zeros((len(feat_dict), len(timestamp_2_ids), feat_shape))
     for node in feat_dict:
         for timestamp in feat_dict[node]:
