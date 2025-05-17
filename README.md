@@ -10,7 +10,7 @@ In this project we apply Temporal Graph Networks (TGN) to stock market domain. T
 - [Temporal Graph Networks for Deep Learning on Dynamic Graphs](https://arxiv.org/abs/2006.10637)
 - [TGN](https://github.com/twitter-research/tgn)
 
-The main goal of the project is computing difference graphs at different timestamp (_influence network_) among an arbitrary set of stocks. The graph reports the relationship between stocks based on price correlation and inter-related stocks behavior ([GCNET: graph-based prediction of stock price movement using graph convolutional network](https://arxiv.org/pdf/2203.11091v1)). We then use the computed dynamic networks to predict stock return movements using Temporal Graph Network (TGN). This approach, exploiting a combination of memory modules and graph-based operators, allows for 
+The main goal of the project is computing difference graphs at different timestamp (_influence network_) among an arbitrary set of stocks. The graph reports the relationship between stocks based on price correlation and inter-related stocks behavior ([GCNET: graph-based prediction of stock price movement using graph convolutional network](https://arxiv.org/pdf/2203.11091v1)). We then use the computed dynamic networks to predict stock return movements using Temporal Graph Network (TGN). This approach, exploiting a combination of memory modules and graph-based operators, allows for dealing with graphs that present a dynamic nature.
 Conceptually, the project can be divided in two modules: Graph Builder and Model Training.
 
 ## Graph Builder
